@@ -1,0 +1,60 @@
+{
+ "categories": [
+  "bag",
+  "dress",
+  "jewellery",
+  "shirt",
+  "shoes",
+  "sunglasses",
+  "top",
+  "watch"
+ ],
+ "occasions": [
+  "wedding",
+  "evening",
+  "party",
+  "work",
+  "formal",
+  "casual",
+  "vacation",
+  "ethnic",
+  "sports"
+ ],
+ "seasons": [
+  "summer",
+  "fall",
+  "winter",
+  "spring"
+ ],
+ "colors": [
+  "black",
+  "blue",
+  "white",
+  "grey",
+  "purple",
+  "red",
+  "pink",
+  "cream",
+  "navy blue",
+  "brown",
+  "teal",
+  "multi",
+  "yellow",
+  "bronze",
+  "gold"
+ ],
+ "trend_terms": [
+  "gold",
+  "tailored",
+  "bold",
+  "black",
+  "vintage",
+  "classic",
+  "white",
+  "cashmere",
+  "elegant",
+  "silver",
+  "grey",
+  "wool"
+ ]
+}
