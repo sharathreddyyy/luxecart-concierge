@@ -11,6 +11,9 @@ import requests
 
 API = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 SIZED = {"dress", "top", "shirt", "shoes"}
+# Occasions whose typical outfits (Indian festive wear) are not in this demo catalog
+TRADITIONAL = ["sangeet", "mehendi", "mehndi", "haldi", "lehenga", "saree", "sari", "kurta", "anarkali",
+               "sherwani", "diwali", "eid", "navratri", "garba", "pooja", "puja"]
 BANNED = ["cheap", "deal", "bargain", "knockoff", "dupe"]
 MAX_PICKS, MAX_CANDIDATES, MAX_NOTE_WORDS = 3, 8, 45
 
@@ -153,6 +156,7 @@ class Result:
     intent: dict = field(default_factory=dict)
     notes: list = field(default_factory=list)
     checks: list = field(default_factory=list)
+    near_misses: list = field(default_factory=list)
     seconds: float = 0.0
     usage: dict = field(default_factory=dict)
 
@@ -216,7 +220,23 @@ def _run(text, budget, size, catalog, vocab, api_key, models, usage, res):
     in_cat = [p for p in catalog if p["category"] == intent["category"]]
     pool = [p for p in in_cat if p["in_stock"] and p["price_usd"] <= budget and (want in p["sizes"] or "One Size" in p["sizes"])]
     res.checks.append(f"{len(pool)} of {len(in_cat)} {intent['category']} pieces are in stock, in size {want} and within ${budget:g}")
+    if any(re.search(r"\b" + w + r"\b", text.lower()) for w in TRADITIONAL):
+        res.notes.append("We currently carry Western styles only, so these are the closest options we have, not traditional festive wear.")
     if not pool:
+        # Closest pieces that miss exactly one limit, clearly labelled (never shown as a match)
+        near = []
+        for p in in_cat:
+            if not p["in_stock"]:
+                continue
+            over = p["price_usd"] - budget
+            size_ok = want in p["sizes"] or "One Size" in p["sizes"]
+            if over > 0 and size_ok:
+                near.append((over / max(budget, 1), p, f"${over:,.2f} over your budget"))
+            elif over <= 0 and not size_ok:
+                near.append((0.5, p, f"not available in size {want} (sizes: {', '.join(p['sizes'])})"))
+        near.sort(key=lambda x: x[0])
+        res.near_misses = [{"name": p["name"], "price_usd": p["price_usd"], "color": p["color"],
+                            "category": p["category"], "why_not": why} for _, p, why in near[:2]]
         stock = sorted([p for p in in_cat if p["in_stock"]], key=lambda p: p["price_usd"])
         res.status = "no_match"
         if not in_cat:

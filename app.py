@@ -134,7 +134,16 @@ with tab_find:
             elif res.status == "needs_clarification":
                 st.info("**One quick question before we choose:** " + res.message)
             elif res.status == "no_match":
-                st.warning("**Nothing fits yet.** " + res.message)
+                st.warning("**Nothing fits all your limits yet.** " + res.message)
+                if res.near_misses:
+                    st.markdown("**Closest pieces we have.** These do not meet every limit you set, so check the note on each:")
+                    for p in res.near_misses:
+                        color = " · " + html.escape(p["color"]) if p["color"] else ""
+                        st.markdown(f"""
+<div class="lc-card" style="border-top-color:#A88B5A"><div class="lc-name">{html.escape(p['name'])}</div>
+<div class="lc-facts">{html.escape(p['category'].title())}{color} · <b>${p['price_usd']:,.2f}</b></div>
+<div class="lc-why" style="color:#9A6212;font-weight:600">Heads up: {html.escape(p['why_not'])}</div></div>""", unsafe_allow_html=True)
+                st.caption("You can also open the \"What we carry\" tab to see every category and price range.")
             else:
                 st.error(res.message + " Nothing was saved or charged.")
 
