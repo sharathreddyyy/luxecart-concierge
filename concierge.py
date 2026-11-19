@@ -74,7 +74,7 @@ def _gen(schema, temp, model):
 def call_gemini(api_key, models, system, payload, schema, temp, usage):
     """Call Gemini with retry + fallback. Returns parsed JSON or raises ConciergeError."""
     if not api_key:
-        raise ConciergeError("no_key", "The concierge is not connected to its stylist service right now. Please try again later.")
+        raise ConciergeError("no_key", "ShelfStylist is not connected to its stylist service right now. Please try again later.")
     last = None
     for model in models:
         for attempt in range(2): # 2 tries per model (backoff 1 s), then the fallback model
@@ -207,7 +207,7 @@ def _run(text, budget, size, catalog, vocab, api_key, models, usage, res):
 
     # code-enforced rules
     if intent["language"] not in ("en", ""):
-        res.status, res.message = "needs_clarification", "Our concierge currently works in English. Could you describe what you are looking for in English?"
+        res.status, res.message = "needs_clarification", "Our stylist currently works in English. Could you describe what you are looking for in English?"
         return
     if d.get("needs_clarification") is True or intent["category"] == "any":
         res.status = "needs_clarification"

@@ -165,7 +165,7 @@ with tab_find:
 
 with tab_carry:
     st.subheader("What we carry")
-    st.write("The concierge only recommends pieces from this catalog. If we do not carry something, it will tell you instead of inventing it.")
+    st.write("The stylist only recommends pieces from this catalog. If we do not carry something, it will tell you instead of inventing it.")
     rows = {}
     for p in CATALOG:
         r = rows.setdefault(p["category"], {"Category": p["category"].title(), "Pieces in stock": 0, "From": 1e9, "Up to": 0})
