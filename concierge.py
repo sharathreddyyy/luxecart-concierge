@@ -75,13 +75,13 @@ def call_gemini(api_key, models, system, payload, schema, temp, usage):
         raise ConciergeError("no_key", "The concierge is not connected to its stylist service right now. Please try again later.")
     last = None
     for model in models:
-        for attempt in range(3):  # 3 tries per model, exponential backoff 1 s, 2 s
+        for attempt in range(2): # 2 tries per model (backoff 1 s), then the fallback model
             body = {"systemInstruction": {"parts": [{"text": system}]},
                     "contents": [{"role": "user", "parts": [{"text": json.dumps(payload)}]}],
                     "generationConfig": _gen(schema, temp, model)}
             try:
                 r = requests.post(API.format(model=model), headers={"x-goog-api-key": api_key},
-                                  json=body, timeout=45)
+                                  json=body, timeout=20)
             except requests.Timeout:
                 last = ("timeout", None)
                 time.sleep(2 ** attempt)
