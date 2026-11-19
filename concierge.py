@@ -66,6 +66,8 @@ def _gen(schema, temp, model):
     g = {"temperature": temp, "responseMimeType": "application/json", "responseSchema": schema}
     if model.startswith("gemini-2.5"):
         g["thinkingConfig"] = {"thinkingBudget": 0}
+    elif model.startswith("gemini-3") and "lite" not in model:
+        g["thinkingConfig"] = {"thinkingLevel": "low"}
     return g
 
 
