@@ -1,4 +1,4 @@
-"""LuxeCart Concierge - Streamlit interface (Assignment 6A)."""
+"""ShelfStylist - Streamlit interface (Assignment 6A)."""
 import csv, html, io, os
 from datetime import datetime
 
@@ -7,7 +7,7 @@ import streamlit as st
 import concierge as C
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-st.set_page_config(page_title="LuxeCart Concierge", page_icon="✦", layout="centered")
+st.set_page_config(page_title="ShelfStylist", page_icon="✦", layout="centered")
 
 
 @st.cache_data
@@ -60,7 +60,7 @@ h1, h2, h3 { font-family: 'Bodoni Moda', Georgia, serif !important; color: #1F2A
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="lc-mark">LUXECART CONCIERGE</div>', unsafe_allow_html=True)
+st.markdown('<div class="lc-mark">SHELFSTYLIST</div>', unsafe_allow_html=True)
 st.title("Your personal stylist, online")
 st.markdown('<p class="lc-sub">Describe what you need in your own words. We suggest up to three pieces that are in stock, in your size and within your budget.</p>', unsafe_allow_html=True)
 
@@ -185,7 +185,7 @@ with tab_history:
         buf = io.StringIO()
         w = csv.DictWriter(buf, fieldnames=list(st.session_state.history[0].keys()))
         w.writeheader(); w.writerows(st.session_state.history)
-        st.download_button("Download as a spreadsheet (CSV)", buf.getvalue(), file_name="luxecart_requests.csv", mime="text/csv")
+        st.download_button("Download as a spreadsheet (CSV)", buf.getvalue(), file_name="shelfstylist_requests.csv", mime="text/csv")
 
 st.divider()
-st.caption("LuxeCart Concierge · a student project (INFO 7375). Your request is sent to Google's Gemini service to understand it; please do not include personal details. Prices are demo prices.")
+st.caption("ShelfStylist · a student project (INFO 7375). Your request is sent to Google's Gemini service to understand it; please do not include personal details. Prices are demo prices.")
